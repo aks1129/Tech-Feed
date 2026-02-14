@@ -66,7 +66,7 @@ export default function FeedScreen() {
     <View style={styles.container}>
       <StatusBar style="dark" />
       <View style={[styles.header, { paddingTop: (Platform.OS === "web" ? webTopInset : insets.top) + 8 }]}>
-        <Text style={styles.headerTitle}>TechPulse</Text>
+        <Text style={styles.headerTitle}>AIFeedX</Text>
         <Text style={styles.headerSubtitle}>Principal AI Engineer Feed</Text>
       </View>
       <CategoryChips selected={category} onSelect={handleCategoryChange} />
