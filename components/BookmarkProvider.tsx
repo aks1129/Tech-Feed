@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BookmarkContext, getOriginalId } from "@/lib/bookmarks";
 import type { FeedItem } from "@/lib/feed-content";
 
-const STORAGE_KEY = "techpulse_bookmarks";
+const STORAGE_KEY = "aifeedx_bookmarks";
 
 export function BookmarkProvider({ children }: { children: ReactNode }) {
   const [bookmarks, setBookmarks] = useState<FeedItem[]>([]);

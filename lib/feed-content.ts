@@ -1,3 +1,8 @@
+export type Difficulty = "Easy" | "Medium" | "Hard";
+
+export const ALL_DIFFICULTIES = ["All", "Easy", "Medium", "Hard"] as const;
+export type DifficultyFilter = (typeof ALL_DIFFICULTIES)[number];
+
 export interface FeedItem {
   id: string;
   category: string;
@@ -5,7 +10,7 @@ export interface FeedItem {
   summary: string;
   codeSnippet?: string;
   codeLang?: string;
-  difficulty?: "Easy" | "Medium" | "Hard";
+  difficulty: Difficulty;
   source: string;
   sourceUrl: string;
   readTime: string;
@@ -263,6 +268,7 @@ const systemDesignContent: FeedItem[] = [
     source: "System Design Primer",
     sourceUrl: "https://github.com/donnemartin/system-design-primer",
     readTime: "5 min",
+    difficulty: "Medium",
     tags: ["Hashing", "Caching", "Scale"],
   },
   {
@@ -303,6 +309,7 @@ const systemDesignContent: FeedItem[] = [
     summary: "Map both servers and keys to a hash ring. Adding/removing nodes only remaps K/N keys on average. Virtual nodes improve load distribution across the ring.",
     source: "Martin Kleppmann",
     sourceUrl: "https://dataintensive.net/",
+    difficulty: "Hard",
     readTime: "5 min",
     tags: ["Distributed", "Hashing", "Load Balancing"],
   },
@@ -313,6 +320,7 @@ const systemDesignContent: FeedItem[] = [
     summary: "Decouple producers from consumers using topics and partitions. Consumer groups enable parallel processing. Exactly-once semantics via idempotent producers and transactional writes.",
     source: "Confluent",
     sourceUrl: "https://developer.confluent.io/patterns/",
+    difficulty: "Hard",
     readTime: "5 min",
     tags: ["Kafka", "Event Sourcing", "CQRS"],
   },
@@ -323,6 +331,7 @@ const systemDesignContent: FeedItem[] = [
     summary: "Horizontal partitioning: range-based (hotspots risk), hash-based (even distribution, hard range queries), directory-based (flexible, single point of failure). Resharding via consistent hashing.",
     source: "System Design Primer",
     sourceUrl: "https://github.com/donnemartin/system-design-primer#sharding",
+    difficulty: "Medium",
     readTime: "4 min",
     tags: ["Database", "Sharding", "Partitioning"],
   },
@@ -361,6 +370,7 @@ def scaled_dot_attention(Q, K, V, mask=None):
     summary: "SGD: noisy but fast. Adam: adaptive learning rates per parameter with momentum. AdamW: decoupled weight decay for better generalization. Learning rate warmup prevents early divergence.",
     source: "Deep Learning Book",
     sourceUrl: "https://www.deeplearningbook.org/",
+    difficulty: "Medium",
     readTime: "4 min",
     tags: ["Optimization", "Adam", "SGD"],
   },
@@ -379,6 +389,7 @@ def scaled_dot_attention(Q, K, V, mask=None):
 # Only A and B are trained
 # Params: r * (d_in + d_out) << d_in * d_out`,
     codeLang: "python",
+    difficulty: "Medium",
     source: "Microsoft Research",
     sourceUrl: "https://arxiv.org/abs/2106.09685",
     readTime: "4 min",
@@ -391,6 +402,7 @@ def scaled_dot_attention(Q, K, V, mask=None):
     summary: "BatchNorm: normalizes across batch dimension, unstable with small batches. LayerNorm: normalizes across features, standard in transformers. RMSNorm: simplified LayerNorm without mean centering, used in LLaMA.",
     source: "Papers With Code",
     sourceUrl: "https://paperswithcode.com/method/layer-normalization",
+    difficulty: "Easy",
     readTime: "3 min",
     tags: ["Normalization", "Training", "Architecture"],
   },
@@ -424,6 +436,7 @@ Answer based on the context above:"""
     # 4. Generate with LLM
     return llm.generate(prompt)`,
     codeLang: "python",
+    difficulty: "Medium",
     source: "LangChain Docs",
     sourceUrl: "https://python.langchain.com/docs/tutorials/rag/",
     readTime: "5 min",
@@ -436,6 +449,7 @@ Answer based on the context above:"""
     summary: "CoT prompting improves reasoning by asking models to show work. Zero-shot CoT: append 'Let's think step by step'. Few-shot CoT: provide exemplar reasoning chains. Tree-of-Thought for complex branching.",
     source: "Google Research",
     sourceUrl: "https://arxiv.org/abs/2201.11903",
+    difficulty: "Easy",
     readTime: "3 min",
     tags: ["Prompting", "CoT", "Reasoning"],
   },
@@ -446,6 +460,7 @@ Answer based on the context above:"""
     summary: "MMLU for broad knowledge, HumanEval for code, MT-Bench for conversation quality. Custom evals: use LLM-as-judge with rubrics. Track latency, cost per token, and hallucination rate alongside quality.",
     source: "Hugging Face",
     sourceUrl: "https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard",
+    difficulty: "Medium",
     readTime: "4 min",
     tags: ["Evaluation", "Benchmarks", "MMLU"],
   },
@@ -476,6 +491,7 @@ response = client.chat.completions.create(
     }]
 )`,
     codeLang: "python",
+    difficulty: "Medium",
     source: "OpenAI Docs",
     sourceUrl: "https://platform.openai.com/docs/guides/function-calling",
     readTime: "4 min",
@@ -514,6 +530,7 @@ def react_agent(query, tools, llm):
             return thought
     return "Max steps reached"`,
     codeLang: "python",
+    difficulty: "Medium",
     source: "LangChain Agents",
     sourceUrl: "https://python.langchain.com/docs/concepts/agents/",
     readTime: "5 min",
@@ -526,6 +543,7 @@ def react_agent(query, tools, llm):
     summary: "Supervisor pattern: one agent delegates to specialists. Debate pattern: agents argue and reach consensus. Hierarchical: tree of agent teams. CrewAI, AutoGen, and LangGraph implementations.",
     source: "Microsoft AutoGen",
     sourceUrl: "https://microsoft.github.io/autogen/",
+    difficulty: "Hard",
     readTime: "5 min",
     tags: ["Multi-Agent", "Orchestration", "CrewAI"],
   },
@@ -536,6 +554,7 @@ def react_agent(query, tools, llm):
     summary: "Model Context Protocol standardizes tool integration. Servers expose tools via JSON-RPC, clients connect agents to any MCP server. Enables composable, reusable tool ecosystems across AI frameworks.",
     source: "Anthropic MCP",
     sourceUrl: "https://modelcontextprotocol.io/",
+    difficulty: "Medium",
     readTime: "4 min",
     tags: ["MCP", "Tool Calling", "Protocol"],
   },
@@ -546,6 +565,7 @@ def react_agent(query, tools, llm):
     summary: "Build agents as directed graphs. Nodes are functions, edges are conditional transitions. Built-in persistence, human-in-the-loop checkpoints, and streaming support for complex agentic workflows.",
     source: "LangGraph Docs",
     sourceUrl: "https://langchain-ai.github.io/langgraph/",
+    difficulty: "Medium",
     readTime: "4 min",
     tags: ["LangGraph", "State Machine", "Workflow"],
   },
@@ -559,6 +579,7 @@ const aiOpsContent: FeedItem[] = [
     summary: "Track data drift (PSI, KS test), concept drift (performance degradation), and feature drift. Set up automated alerts when distributions shift beyond thresholds. Tools: Evidently AI, WhyLabs, Arize.",
     source: "Evidently AI",
     sourceUrl: "https://www.evidentlyai.com/",
+    difficulty: "Medium",
     readTime: "4 min",
     tags: ["Monitoring", "Data Drift", "Observability"],
   },
@@ -579,6 +600,7 @@ def detect_anomalies(metrics_df):
     anomalies = metrics_df[predictions == -1]
     return anomalies`,
     codeLang: "python",
+    difficulty: "Medium",
     source: "Google SRE Book",
     sourceUrl: "https://sre.google/sre-book/table-of-contents/",
     readTime: "4 min",
@@ -591,6 +613,7 @@ def detect_anomalies(metrics_df):
     summary: "LLM-powered runbook automation: parse alerts, correlate with historical incidents, suggest remediation steps. PagerDuty + LLM integration for intelligent triage and auto-remediation of known issues.",
     source: "PagerDuty",
     sourceUrl: "https://www.pagerduty.com/resources/learn/what-is-aiops/",
+    difficulty: "Hard",
     readTime: "5 min",
     tags: ["Incident Response", "Automation", "Runbooks"],
   },
@@ -604,6 +627,7 @@ const agenticOpsContent: FeedItem[] = [
     summary: "Trace every LLM call, tool invocation, and chain step. Track latency, token usage, and cost per trace. Debug agent failures by replaying execution traces. A/B test prompt variants in production.",
     source: "LangSmith",
     sourceUrl: "https://smith.langchain.com/",
+    difficulty: "Medium",
     readTime: "4 min",
     tags: ["Observability", "Tracing", "LangSmith"],
   },
@@ -614,6 +638,7 @@ const agenticOpsContent: FeedItem[] = [
     summary: "Input validation: content filtering, prompt injection detection. Output validation: fact-checking, PII redaction, toxicity scoring. Circuit breakers for runaway agents. NeMo Guardrails for policy enforcement.",
     source: "NVIDIA NeMo",
     sourceUrl: "https://github.com/NVIDIA/NeMo-Guardrails",
+    difficulty: "Hard",
     readTime: "5 min",
     tags: ["Guardrails", "Safety", "Prompt Injection"],
   },
@@ -624,6 +649,7 @@ const agenticOpsContent: FeedItem[] = [
     summary: "Semantic caching with embeddings similarity. Prompt compression to reduce token count. Model routing: use cheaper models for simple tasks, expensive ones for complex. Batch API for non-real-time workloads.",
     source: "OpenAI Cookbook",
     sourceUrl: "https://cookbook.openai.com/",
+    difficulty: "Medium",
     readTime: "4 min",
     tags: ["Cost", "Caching", "Model Routing"],
   },
@@ -637,6 +663,7 @@ const deploymentContent: FeedItem[] = [
     summary: "Blue-green: two identical environments, instant switch. Canary: gradual traffic shift (1% -> 5% -> 25% -> 100%) with automated rollback on error rate spikes. Feature flags for granular control.",
     source: "Martin Fowler",
     sourceUrl: "https://martinfowler.com/bliki/BlueGreenDeployment.html",
+    difficulty: "Medium",
     readTime: "4 min",
     tags: ["CI/CD", "Canary", "Blue-Green"],
   },
@@ -666,6 +693,7 @@ spec:
         type: AverageValue
         averageValue: "10"`,
     codeLang: "yaml",
+    difficulty: "Hard",
     source: "Kubernetes Docs",
     sourceUrl: "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/",
     readTime: "5 min",
@@ -678,6 +706,7 @@ spec:
     summary: "TorchServe: PyTorch-native, easy setup, model archiver. Triton: multi-framework (TF, PyTorch, ONNX), dynamic batching, model ensembles. vLLM for LLM-specific serving with PagedAttention.",
     source: "NVIDIA Triton",
     sourceUrl: "https://developer.nvidia.com/triton-inference-server",
+    difficulty: "Hard",
     readTime: "5 min",
     tags: ["Model Serving", "Triton", "vLLM"],
   },
@@ -688,6 +717,7 @@ spec:
     summary: "Declarative ML deployments: model configs in Git, ArgoCD syncs to cluster. Automatic rollback on health check failures. Kustomize overlays for dev/staging/prod environment configs.",
     source: "ArgoCD Docs",
     sourceUrl: "https://argo-cd.readthedocs.io/",
+    difficulty: "Medium",
     readTime: "4 min",
     tags: ["GitOps", "ArgoCD", "ML Pipeline"],
   },
@@ -701,6 +731,7 @@ const techStackContent: FeedItem[] = [
     summary: "Data: Spark + Delta Lake. Feature Store: Feast/Tecton. Training: PyTorch + Lightning. Experiment Tracking: MLflow/W&B. Serving: vLLM/Triton. Orchestration: Airflow/Dagster. Monitoring: Evidently AI.",
     source: "ML Ops Community",
     sourceUrl: "https://mlops.community/",
+    difficulty: "Medium",
     readTime: "5 min",
     tags: ["MLOps", "Platform", "Architecture"],
   },
@@ -711,6 +742,7 @@ const techStackContent: FeedItem[] = [
     summary: "Pinecone: managed, serverless, easy to start. Weaviate: hybrid search, multi-modal. Qdrant: Rust-based, fast. Milvus: distributed, GPU acceleration. ChromaDB: lightweight, embedded. pgvector: if you already use Postgres.",
     source: "AI Engineer",
     sourceUrl: "https://www.latent.space/",
+    difficulty: "Easy",
     readTime: "4 min",
     tags: ["Vector DB", "RAG", "Comparison"],
   },
@@ -721,6 +753,7 @@ const techStackContent: FeedItem[] = [
     summary: "LangChain: general-purpose, large ecosystem, chains + agents. LlamaIndex: data-focused, best for RAG. DSPy: programmatic prompt optimization, compiler approach. Haystack: production-focused pipelines.",
     source: "The AI Engineer",
     sourceUrl: "https://www.latent.space/p/2024-frameworks",
+    difficulty: "Medium",
     readTime: "5 min",
     tags: ["LangChain", "LlamaIndex", "Frameworks"],
   },
@@ -731,6 +764,7 @@ const techStackContent: FeedItem[] = [
     summary: "AWS (p5 instances): enterprise, expensive. GCP (A3): TPU alternative. Lambda Labs: cheapest H100s. RunPod: serverless GPU. Together AI: inference API. Modal: serverless compute with cold start optimization.",
     source: "GPU Benchmarks",
     sourceUrl: "https://fullstackdeeplearning.com/cloud-gpus/",
+    difficulty: "Easy",
     readTime: "3 min",
     tags: ["GPU", "Cloud", "Cost"],
   },
@@ -776,11 +810,16 @@ export function getFeedPage(
   page: number,
   pageSize: number,
   category: Category = "All",
+  difficultyFilter: DifficultyFilter = "All",
 ): FeedItem[] {
   let filtered =
     category === "All"
       ? ALL_CONTENT
       : ALL_CONTENT.filter((item) => item.category === category);
+
+  if (difficultyFilter !== "All") {
+    filtered = filtered.filter((item) => item.difficulty === difficultyFilter);
+  }
 
   const seed = page * 7 + 13;
   const shuffled = shuffleArray(filtered);

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import {
   View,
   FlatList,
@@ -12,46 +12,60 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import Colors from "@/constants/colors";
 import { CategoryChips } from "@/components/CategoryChips";
+import { DifficultySelector } from "@/components/DifficultySelector";
 import { FeedCard } from "@/components/FeedCard";
+import { useDifficultyLevel } from "@/lib/difficulty-level";
 import { getFeedPage, type Category, type FeedItem } from "@/lib/feed-content";
 
 const PAGE_SIZE = 5;
 
 export default function FeedScreen() {
   const insets = useSafeAreaInsets();
+  const { level } = useDifficultyLevel();
   const [category, setCategory] = useState<Category>("All");
-  const [items, setItems] = useState<FeedItem[]>(() => getFeedPage(0, PAGE_SIZE, "All"));
+  const [items, setItems] = useState<FeedItem[]>(() =>
+    getFeedPage(0, PAGE_SIZE, "All", "All"),
+  );
   const [page, setPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const flatListRef = useRef<FlatList>(null);
 
-  const handleCategoryChange = useCallback((cat: Category) => {
-    setCategory(cat);
+  useEffect(() => {
     setPage(1);
-    setItems(getFeedPage(0, PAGE_SIZE, cat));
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  }, []);
+    setItems(getFeedPage(0, PAGE_SIZE, category, level));
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: false });
+  }, [level]);
+
+  const handleCategoryChange = useCallback(
+    (cat: Category) => {
+      setCategory(cat);
+      setPage(1);
+      setItems(getFeedPage(0, PAGE_SIZE, cat, level));
+      flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    },
+    [level],
+  );
 
   const handleRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       setPage(1);
-      setItems(getFeedPage(0, PAGE_SIZE, category));
+      setItems(getFeedPage(0, PAGE_SIZE, category, level));
       setRefreshing(false);
     }, 600);
-  }, [category]);
+  }, [category, level]);
 
   const handleLoadMore = useCallback(() => {
     if (loadingMore) return;
     setLoadingMore(true);
     setTimeout(() => {
-      const newItems = getFeedPage(page, PAGE_SIZE, category);
+      const newItems = getFeedPage(page, PAGE_SIZE, category, level);
       setItems((prev) => [...prev, ...newItems]);
       setPage((p) => p + 1);
       setLoadingMore(false);
     }, 400);
-  }, [page, category, loadingMore]);
+  }, [page, category, level, loadingMore]);
 
   const renderItem = useCallback(
     ({ item }: { item: FeedItem }) => <FeedCard item={item} />,
@@ -65,10 +79,16 @@ export default function FeedScreen() {
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-      <View style={[styles.header, { paddingTop: (Platform.OS === "web" ? webTopInset : insets.top) + 8 }]}>
+      <View
+        style={[
+          styles.header,
+          { paddingTop: (Platform.OS === "web" ? webTopInset : insets.top) + 8 },
+        ]}
+      >
         <Text style={styles.headerTitle}>AIFeedX</Text>
         <Text style={styles.headerSubtitle}>Principal AI Engineer Feed</Text>
       </View>
+      <DifficultySelector />
       <CategoryChips selected={category} onSelect={handleCategoryChange} />
       <FlatList
         ref={flatListRef}
@@ -96,7 +116,10 @@ export default function FeedScreen() {
         }
         ListEmptyComponent={
           <View style={styles.emptyState}>
-            <Text style={styles.emptyText}>No content found</Text>
+            <Text style={styles.emptyTitle}>No content found</Text>
+            <Text style={styles.emptyText}>
+              Try a different difficulty level or category
+            </Text>
           </View>
         }
         initialNumToRender={5}
@@ -117,8 +140,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 4,
     backgroundColor: Colors.light.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.light.border,
   },
   headerTitle: {
     fontSize: 28,
@@ -143,9 +164,15 @@ const styles = StyleSheet.create({
   emptyState: {
     paddingVertical: 60,
     alignItems: "center",
+    gap: 8,
+  },
+  emptyTitle: {
+    fontSize: 17,
+    fontFamily: "Inter_600SemiBold",
+    color: Colors.light.text,
   },
   emptyText: {
-    fontSize: 15,
+    fontSize: 14,
     fontFamily: "Inter_400Regular",
     color: Colors.light.textSecondary,
   },

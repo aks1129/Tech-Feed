@@ -11,6 +11,7 @@ import {
 } from "@expo-google-fonts/inter";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { BookmarkProvider } from "@/components/BookmarkProvider";
+import { DifficultyLevelProvider } from "@/components/DifficultyLevelProvider";
 import { queryClient } from "@/lib/query-client";
 
 SplashScreen.preventAutoHideAsync();
@@ -44,9 +45,11 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <GestureHandlerRootView>
           <KeyboardProvider>
-            <BookmarkProvider>
-              <RootLayoutNav />
-            </BookmarkProvider>
+            <DifficultyLevelProvider>
+              <BookmarkProvider>
+                <RootLayoutNav />
+              </BookmarkProvider>
+            </DifficultyLevelProvider>
           </KeyboardProvider>
         </GestureHandlerRootView>
       </QueryClientProvider>
